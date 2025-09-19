@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TikTok">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Chargement TikTok (Présentation)</title>
+<style>
+html, body {
+  margin:0;
+  padding:0;
+  height:100%;
+  background:#000;
+  font-family:sans-serif;
+  color:#fff;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+}
+.logo {
+  width:80px;
+  height:80px;
+  margin-bottom:30px;
+}
+.logo img {
+  width:100%;
+  height:100%;
+}
+.progress-bar {
+  width:220px;
+  height:12px;
+  background:#222;
+  border-radius:6px;
+  overflow:hidden;
+}
+.progress-fill {
+  width:0%;
+  height:100%;
+  background:#ff2d55;
+  border-radius:6px;
+  transition: width 0.2s linear;
+}
+.message {
+  margin-top:20px;
+  font-size:14px;
+  color:#888;
+}
+</style>
+</head>
+<body>
+
+<div class="logo">
+  <img src="logo/tiktok.png" alt="TikTok">
+</div>
+
+<div class="progress-bar">
+  <div class="progress-fill" id="progress"></div>
+</div>
+<div class="message">Chargement de vos vidéos...</div>
+
+<script>
+var progress = document.getElementById('progress');
+var steps = [5,10,15,20,28,35,45,55,65,75,85,90,93,95,97,99]; // progression irrégulière
+var index = 0;
+
+function stepProgress(){
+  if(index < steps.length){
+    progress.style.width = steps[index] + "%";
+    index++;
+    // Variation du délai pour simuler un faux freeze
+    var delay = Math.random() * 300 + 200; // 200 à 500ms
+    setTimeout(stepProgress, delay);
+  } else {
+    // Faux freeze à 99%
+    setTimeout(function(){
+      progress.style.width = "100%";
+      setTimeout(function(){
+        window.location.href = "tiktok_feed.html";
+      }, 500); // petit délai avant redirection
+    }, 2000); // 2 secondes de freeze
+  }
+}
+
+// Démarrer la progression après un petit délai
+setTimeout(stepProgress, 500);
+</script>
+
+</body>
+</html>
