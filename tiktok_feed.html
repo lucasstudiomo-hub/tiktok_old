@@ -4,138 +4,49 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="TikTok">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>TikTok Feed (Présentation)</title>
+<title>Faux TikTok Beta — iOS7</title>
 <style>
-html, body {
-  margin:0;
-  padding:0;
-  height:100%;
-  background:#000;
-  font-family:sans-serif;
-  overflow:hidden;
-}
-.feed-container {
-  width:100%;
-  height:100%;
-  position:relative;
-}
-.video-slide {
-  width:100%;
-  height:100%;
-  position:absolute;
-  top:0;
-  left:0;
-  display:none;
-  object-fit:cover;
-}
-.video-slide.active {
-  display:block;
-}
-.overlay {
-  position:absolute;
-  bottom:50px;
-  left:10px;
-  color:#fff;
-  text-shadow: 0 0 5px #000;
-}
-.overlay .username {
-  font-weight:bold;
-  margin-bottom:5px;
-}
-.overlay .music {
-  font-size:14px;
-}
-.buttons {
-  position:absolute;
-  right:10px;
-  bottom:50px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-.buttons button {
-  background:none;
-  border:none;
-  color:#888;
-  margin:8px 0;
-  font-size:20px;
-  cursor:pointer;
-}
-.buttons button.share {
-  color:#fff; /* seul bouton actif */
-}
+  html, body {margin:0; padding:0; height:100%; background:#000; overflow:hidden; font-family:sans-serif;}
+  .video-wrapper {position:relative; width:100%; height:100%; overflow:hidden;}
+  video {position:absolute; top:0; left:0; width:100%; height:100%; min-width:100%; min-height:100%;}
+  .overlay {position:absolute; bottom:20px; left:20px; color:#fff; font-size:16px; text-shadow:0 0 6px #000;}
+  .btn {position:absolute; top:20px; right:20px; background:#00d4ff; color:#000; padding:6px 10px; border-radius:8px; font-weight:bold;}
 </style>
 </head>
 <body>
-
-<div class="feed-container">
-  <!-- Vidéos -->
-  <video class="video-slide active" src="1.mp4" autoplay muted loop></video>
-  <video class="video-slide" src="2.mp4" autoplay muted loop></video>
-  <video class="video-slide" src="3.mp4" autoplay muted loop></video>
-  <video class="video-slide" src="4.mp4" autoplay muted loop></video>
-  <video class="video-slide" src="5.mp4" autoplay muted loop></video>
-
-  <!-- Overlay utilisateur et musique -->
-  <div class="overlay">
-    <div class="username" id="username">@user1</div>
-    <div class="music" id="music">🎵 Fake Song 1</div>
-  </div>
-
-  <!-- Boutons -->
-  <div class="buttons">
-    <button class="like">♥</button>
-    <button class="comment">💬</button>
-    <button class="share" onclick="shareVideo()">↗</button>
-  </div>
+<div class="video-wrapper">
+  <video id="videoPlayer" autoplay muted webkit-playsinline>
+    <source src="1.mp4" type="video/mp4">
+    Votre navigateur ne supporte pas la vidéo.
+  </video>
+  <div class="overlay" id="videoLabel">Vidéo 1</div>
+  <div class="btn" onclick="nextVideo()">Suivant ▶</div>
 </div>
 
 <script>
-var videos = document.querySelectorAll('.video-slide');
-var usernames = ["@user1","@coolguy","@sandboxfan","@demo123","@faketik"];
-var musics = ["🎵 Fake Song 1","🎵 Chill Beat","🎵 Sandbox Track","🎵 Demo Music","🎵 Test Tune"];
+var videos = ["1.mp4","2.mp4","3.mp4","4.mp4","5.mp4"];
 var current = 0;
+var videoPlayer = document.getElementById('videoPlayer');
+var videoLabel = document.getElementById('videoLabel');
 
-function showVideo(index){
-  videos.forEach(function(v,i){
-    v.classList.remove('active');
-    if(i === index) v.classList.add('active');
-  });
-  document.getElementById('username').textContent = usernames[index];
-  document.getElementById('music').textContent = musics[index];
+function nextVideo(){
+  current = (current + 1) % videos.length;
+  videoPlayer.src = videos[current];
+  videoPlayer.load();
+  videoPlayer.play();
+  videoLabel.textContent = "Vidéo " + (current + 1);
 }
 
-// Slide vertical avec swipe ou clic (iOS 7 simplifié)
+// Rejouer vidéo après ended pour iOS 7
+videoPlayer.addEventListener('ended', function(){ videoPlayer.play(); }, false);
+
+// Swipe simple pour mobile iOS
 var startY = 0;
-document.addEventListener('touchstart', function(e){
-  startY = e.touches[0].clientY;
+videoPlayer.addEventListener('touchstart', function(e){ startY = e.touches[0].clientY; });
+videoPlayer.addEventListener('touchend', function(e){
+  var diff = e.changedTouches[0].clientY - startY;
+  if(diff < -50) nextVideo(); // swipe up
 });
-document.addEventListener('touchend', function(e){
-  var endY = e.changedTouches[0].clientY;
-  if(startY - endY > 50){ // swipe up
-    current = (current + 1) % videos.length;
-    showVideo(current);
-  } else if(endY - startY > 50){ // swipe down
-    current = (current - 1 + videos.length) % videos.length;
-    showVideo(current);
-  }
-});
-
-// Fonction partager
-function shareVideo(){
-  if(navigator.share){ // iOS / Web Share API
-    navigator.share({
-      title: 'TikTok Présentation',
-      text: 'Regardez cette vidéo sur TikTok (sandbox)',
-      url: window.location.href
-    });
-  } else {
-    alert("Partage activé via URL : " + window.location.href);
-  }
-}
 </script>
-
 </body>
 </html>
