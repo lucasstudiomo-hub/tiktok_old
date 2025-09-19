@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TikTok">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>TikTok (Présentation)</title>
+<style>
+html, body {
+  margin:0;
+  padding:0;
+  height:100%;
+  background:#000;
+  font-family:sans-serif;
+  color:#fff;
+  overflow:hidden;
+}
+.container {
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  background:#000;
+}
+.logo {
+  width:100px;
+  height:100px;
+  margin-bottom:20px;
+  position:relative;
+  top:0;
+}
+.logo img {
+  width:100%;
+  height:100%;
+}
+.loader {
+  width:50px;
+  height:50px;
+  border:5px solid #333;
+  border-top:5px solid #00f2ff;
+  border-radius:50%;
+  animation: spin 1s linear infinite;
+  opacity:0;
+  margin-top:20px;
+}
+
+/* Animation logo */
+@keyframes moveLogo {
+  0% { top:0; }
+  100% { top:-20px; }
+}
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="logo" id="logo">
+    <img src="logo/tiktok.png" alt="TikTok">
+  </div>
+  <div class="loader" id="loader"></div>
+</div>
+
+<script>
+var logo = document.getElementById('logo');
+var loader = document.getElementById('loader');
+
+// Attente 3 secondes avant de bouger le logo
+setTimeout(function(){
+  logo.style.animation = "moveLogo 1s ease forwards";
+  loader.style.opacity = 1;
+}, 3000);
+
+// Redirection après 5 secondes de chargement total
+setTimeout(function(){
+  window.location.href = "tiktok1.html";
+}, 8000); // 3s attente + 5s chargement = 8s total
+</script>
+
+</body>
+</html>
